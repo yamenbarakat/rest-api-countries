@@ -1,0 +1,406 @@
+@import "./components/all.min.css";
+
+/* global */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Nunito Sans", sans-serif;
+}
+
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin: 0 auto;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* common properties */
+
+/* header */
+
+header {
+  padding: 30px 0;
+  position: relative;
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 16px;
+  margin: 0;
+  font-weight: 800;
+}
+
+header .color-theme {
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+header .color-theme::before {
+  display: inline-block;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+
+  font: var(--fa-font-regular);
+  content: "\f186";
+  transform: rotate(-25deg);
+  margin-right: 6px;
+}
+
+/* main */
+
+main {
+  padding-bottom: 40px;
+  min-height: 100vh;
+}
+
+/* main nav */
+
+nav {
+  padding: 40px 0;
+}
+
+nav .container {
+  display: flex;
+  flex-direction: column;
+  gap: 46px;
+}
+
+nav .search {
+  position: relative;
+  max-width: 400px;
+}
+
+nav .search::before {
+  display: inline-block;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+
+  font: var(--fa-font-solid);
+  content: "\f002";
+
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0 25px;
+}
+
+nav input {
+  border: none;
+  padding: 16px;
+  padding-left: 66px;
+  border-radius: 6px;
+  font-size: 14px;
+  position: relative;
+  width: 100%;
+}
+
+.filter {
+  width: 220px;
+  position: relative;
+  font-size: 14px;
+}
+
+.filter .dropdown {
+  border: none;
+  padding: 16px 22px;
+  border-radius: 6px;
+  width: 100%;
+  text-align: left;
+  position: relative;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.filter .dropdown::after {
+  display: inline-block;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+
+  font: var(--fa-font-solid);
+  content: "\f078";
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+}
+
+.filter ul {
+  padding: 16px 0;
+  border-radius: 6px;
+  position: absolute;
+  width: 100%;
+  margin-top: 4px;
+  z-index: 100;
+  font-weight: 600;
+}
+
+.filter li {
+  padding-left: 22px;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.filter li:not(:last-child) {
+  margin-bottom: 12px;
+}
+
+.filter li:hover {
+  padding-left: 32px;
+}
+
+/* main countries */
+
+.countries .container {
+  display: grid;
+  justify-items: center;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 40px;
+}
+
+.country {
+  width: 240px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.5s, box-shadow 0.5s;
+}
+
+.country:hover {
+  transform: translateY(-10px);
+}
+
+.country img {
+  width: 100%;
+  height: 150px;
+  border-radius: 6px 6px 0 0;
+}
+
+.country .details {
+  padding: 25px 25px 30px;
+  font-size: 13px;
+}
+
+.country .details h2 {
+  margin-top: 0;
+}
+
+.country .details li {
+  margin-bottom: 8px;
+}
+
+.country .details span:first-child {
+  font-weight: 600;
+}
+
+/* country-details */
+
+.country-details {
+  padding: 50px 10px 0;
+}
+
+.country-details .back {
+  margin-bottom: 50px;
+  border: none;
+  padding: 10px 30px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.country-details .back i {
+  margin-right: 10px;
+}
+
+.country-details .img-container {
+  max-width: 400px;
+}
+
+.country-details img {
+  width: 100%;
+}
+
+.country-details .content h2 {
+  margin: 40px 0 30px;
+  font-size: 24px;
+}
+
+.country-details .content {
+  font-size: 15px;
+}
+
+.country-details .info {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.country-details .info li {
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.country-details .info span:first-child {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.country-details .borders-countries p {
+  font-weight: 600;
+}
+
+.country-details .borders {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 500px;
+}
+
+.country-details .borders button {
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* dark mode */
+
+.dark .country .details span {
+  font-weight: 300;
+}
+
+.dark .country .details span:last-child {
+  opacity: 0.7;
+}
+
+.dark .country-details .info span {
+  font-weight: 300;
+}
+
+.dark .country-details .info span:last-child {
+  opacity: 0.7;
+}
+
+.dark .country-details .borders-countries p {
+  font-weight: 300;
+}
+
+.dark .country-details .borders button {
+  font-weight: 300;
+  opacity: 0.8;
+}
+
+/* media query */
+
+@media (min-width: 770px) {
+  .container {
+    width: 750px;
+  }
+
+  /* header */
+
+  header h1 {
+    font-size: 24px;
+  }
+
+  header .color-theme {
+    font-size: 16px;
+  }
+
+  /* main nav */
+
+  nav .container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  nav .search {
+    width: 400px;
+  }
+
+  /* main countries */
+
+  .countries .container {
+    gap: 50px 60px;
+  }
+}
+
+@media (min-width: 950px) {
+  .container {
+    width: 940px;
+  }
+
+  /* country details */
+
+  .country-details .back {
+    margin: 20px 0 70px;
+  }
+
+  .country-details .content {
+    display: flex;
+    gap: 70px;
+  }
+
+  .country-details .details {
+    flex: 1;
+  }
+
+  .country-details .details h2 {
+    margin-top: 0;
+    font-size: 27px;
+  }
+
+  .country-details .info {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+
+  /* country details  */
+
+  .country-details .content {
+    gap: 120px;
+  }
+
+  .country-details .info {
+    margin-bottom: 50px;
+  }
+
+  .country-details .img-container {
+    max-width: 500px;
+  }
+
+  .borders-countries {
+    display: grid;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .borders-countries p {
+    margin: 0;
+    line-height: 1.6;
+  }
+}

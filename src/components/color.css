@@ -1,0 +1,99 @@
+:root {
+  --dark-gray: hsl(0, 0%, 52%);
+  --light-gray: hsl(0, 0%, 98%);
+  --dark-blue: hsl(209, 23%, 22%);
+  --dark-blue-background: hsl(207, 26%, 17%);
+  --dark-blue-text: hsl(200, 15%, 8%);
+  --white: #fff;
+
+  --shadow-color: hsl(0deg 0% 52% / 37%);
+  --shadow-dark-color: hsla(0, 0%, 0%, 0.212);
+}
+
+/* light mode */
+
+nav input,
+.filter .dropdown,
+.filter ul,
+.country-details .back,
+.country-details .borders button {
+  box-shadow: 1px 1px 8px 0px var(--shadow-color);
+}
+
+.filter .dropdown,
+.filter ul,
+.country,
+.country-details .back,
+.country-details .borders button {
+  background-color: var(--white);
+}
+
+header {
+  box-shadow: 0px 1px 8px 0px var(--shadow-color);
+}
+
+main {
+  background-color: var(--light-gray);
+}
+
+nav .search::before {
+  color: var(--dark-gray);
+}
+
+nav input {
+  outline: none;
+  caret-color: var(--dark-gray);
+}
+
+.country:hover {
+  box-shadow: 1px 1px 8px 2px var(--shadow-color);
+}
+
+/* dark mode */
+
+.dark header,
+.dark nav input,
+.dark .filter .dropdown,
+.dark .filter ul,
+.dark .country,
+.dark .country-details .back,
+.dark .country-details .borders button {
+  background-color: var(--dark-blue);
+}
+
+.dark nav input,
+.dark .filter .dropdown,
+.dark .filter ul,
+.dark nav .search::before,
+.dark nav input::placeholder,
+.dark .country,
+.dark .country-details,
+.dark .country-details .back,
+.dark .country-details .borders button,
+.dark .no-result {
+  color: var(--light-gray);
+}
+
+.dark header {
+  color: var(--white);
+  box-shadow: 0px 1px 8px 0px var(--shadow-dark-color);
+}
+
+.dark main {
+  background-color: var(--dark-blue-background);
+}
+
+.dark nav input,
+.dark .filter .dropdown,
+.dark .filter ul,
+.dark .country {
+  font-weight: 300;
+}
+
+.dark nav input,
+.dark .filter .dropdown,
+.dark .country:hover,
+.dark .country-details .back,
+.dark .country-details .borders button {
+  box-shadow: 1px 1px 8px 0px var(--shadow-dark-color);
+}
