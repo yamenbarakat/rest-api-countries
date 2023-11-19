@@ -22,6 +22,7 @@ export default function App() {
 
   function handleSelectedCountry(country) {
     setSelectedCountry(country);
+    window.scrollTo(0, 0);
   }
 
   let SelectedRegion = countries;
@@ -78,6 +79,7 @@ export default function App() {
             selectedCountry={selectedCountry}
             onSelectedCountry={handleSelectedCountry}
             countries={countries}
+            OnSetQuery={setQuery}
           />
         ) : (
           <>

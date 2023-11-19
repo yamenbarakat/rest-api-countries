@@ -92,6 +92,7 @@ nav input {
 
 .dark nav input,
 .dark .filter .dropdown,
+.filter ul,
 .dark .country:hover,
 .dark .country-details .back,
 .dark .country-details .borders button {

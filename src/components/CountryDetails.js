@@ -4,6 +4,7 @@ export default function CountryDetails({
   selectedCountry,
   onSelectedCountry,
   countries,
+  OnSetQuery,
 }) {
   const {
     flag,
@@ -66,10 +67,18 @@ export default function CountryDetails({
     });
   }, [borders]);
 
+  function handleRemoveSelectedCountry() {
+    onSelectedCountry(null);
+    OnSetQuery("");
+  }
+
   return (
     <div className="country-details">
       <div className="container">
-        <button className="back" onClick={() => onSelectedCountry(null)}>
+        <button
+          className="back"
+          onClick={() => onSelectedCountry(handleRemoveSelectedCountry)}
+        >
           <i className="fa-solid fa-arrow-left-long"></i> Back
         </button>
         <div className="content">
