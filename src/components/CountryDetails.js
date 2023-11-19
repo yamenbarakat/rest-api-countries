@@ -7,25 +7,26 @@ export default function CountryDetails({
   OnSetQuery,
 }) {
   const {
-    flag,
-    name,
-    nativeName,
+    flags,
+    name: { common: name },
+    name: { nativeName },
     population,
     region,
     subregion,
     capital,
-    topLevelDomain,
+    tld,
     currencies,
     languages,
+    borders,
   } = selectedCountry;
 
-  const borders = selectedCountry.borders?.map((country) => {
-    return countries.find((code) => code.alpha3Code === country);
+  const bordersOfCountry = borders?.map((country) => {
+    return countries.find((code) => code.cca3 === country);
   });
 
-  function handleArray(array) {
+  function handleArrayLangs(array) {
     return array.reduce((acc, el, i, arr) => {
-      if (arr.length === 1 || i === 0) return el.name;
+      if (arr.length === 1 || i === 0) return el;
 
       if (arr.length !== i + 1) {
         acc += ", ";
@@ -33,12 +34,12 @@ export default function CountryDetails({
         acc += " and ";
       }
 
-      return (acc += el.name);
+      return (acc += el);
     }, "");
   }
 
   function handleSelectedCountry(name) {
-    const country = countries.find((country) => country.name === name);
+    const country = countries.find((country) => country.name.common === name);
 
     onSelectedCountry(country);
   }
@@ -83,52 +84,61 @@ export default function CountryDetails({
         </button>
         <div className="content">
           <div className="img-container">
-            <img src={flag} alt={`${name} flag`} />
+            <img src={flags.svg} alt={`${flags.alt}`} />
           </div>
           <div className="details">
             <h2>{name}</h2>
             <div className="info">
               <ul>
                 <li>
-                  <span>native name</span>: <span>{nativeName}</span>
+                  <span>native name: </span>
+                  <span>{Object.values(nativeName)[0].official}</span>
                 </li>
                 <li>
-                  <span>population</span>:{" "}
+                  <span>population: </span>
                   <span>{population.toLocaleString()}</span>
                 </li>
                 <li>
-                  <span>region</span>: <span>{region}</span>
+                  <span>region: </span>
+                  <span>{region}</span>
                 </li>
                 <li>
-                  <span>sub region</span>: <span>{subregion}</span>
+                  <span>sub region: </span>
+                  <span>{subregion}</span>
                 </li>
                 <li>
-                  <span>capital</span>: <span>{capital}</span>
+                  <span>capital: </span>
+                  <span>{capital}</span>
                 </li>
               </ul>
               <ul>
                 <li>
-                  <span>top level domain</span>: <span>{topLevelDomain}</span>
+                  <span>top level domain: </span> <span>{tld[0]}</span>
                 </li>
                 <li>
-                  <span>currencies</span>:{" "}
-                  <span>{handleArray(currencies)}</span>
+                  <span>currencies: </span>
+                  <span>{Object.values(currencies)[0].name}</span>
                 </li>
                 <li>
-                  <span>languages</span>: <span>{handleArray(languages)}</span>
+                  <span>languages: </span>
+                  <span>
+                    {handleArrayLangs(Array.from(Object.values(languages)))}
+                  </span>
                 </li>
               </ul>
             </div>
             <div className="borders-countries">
               <p>Border Countries:</p>
               <div className="borders">
-                {borders
-                  ? borders.map((country) => (
+                {bordersOfCountry
+                  ? bordersOfCountry.map((country) => (
                       <button
-                        key={country.name}
-                        onClick={() => handleSelectedCountry(country.name)}
+                        key={country.name.common}
+                        onClick={() =>
+                          handleSelectedCountry(country.name.common)
+                        }
                       >
-                        {country.name}
+                        {country.name.common}
                       </button>
                     ))
                   : "None"}

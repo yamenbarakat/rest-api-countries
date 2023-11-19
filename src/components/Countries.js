@@ -8,7 +8,7 @@ export default function Countries({ countries, onSelectedCountry }) {
           countries.map((country) => (
             <Country
               country={country}
-              key={country.name}
+              key={country.name.common}
               onSelectedCountry={onSelectedCountry}
             />
           ))
@@ -21,9 +21,9 @@ export default function Countries({ countries, onSelectedCountry }) {
 function Country({ country, onSelectedCountry }) {
   return (
     <div className="country" onClick={() => onSelectedCountry(country)}>
-      <img src={country.flag} alt={`${country.name} flag`} />
+      <img src={country.flags.png} alt={`${country.name.common} flag`} />
       <div className="details">
-        <h2>{country.name}</h2>
+        <h2>{country.name.common}</h2>
         <ul>
           <li>
             <span>Population:</span>{" "}

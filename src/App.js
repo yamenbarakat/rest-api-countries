@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // css files
 import "./index.css";
@@ -11,14 +11,38 @@ import Main from "./components/Main";
 import NavBar from "./components/NavBar";
 import Countries from "./components/Countries";
 import CountryDetails from "./components/CountryDetails";
-import countries from "./data.json";
+
 import Filter from "./components/Filter";
 import Search from "./components/Search";
+import Loader from "./components/Loader";
 
 export default function App() {
+  const [countries, setCountries] = useState([]);
   const [region, setRegion] = useState("Filter by Region");
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [query, setQuery] = useState("");
+  const [loader, setLoader] = useState(true);
+
+  useEffect(() => {
+    async function fetchCountries() {
+      const res = await fetch("https://restcountries.com/v3.1/all");
+      const data = await res.json();
+      setCountries(data);
+      setLoader(false);
+    }
+
+    fetchCountries();
+  }, []);
+
+  useEffect(() => {
+    const savedMode = localStorage.getItem("mode");
+
+    if (savedMode) {
+      document.body.classList.add("dark");
+    }
+  }, []);
+
+  console.log(countries);
 
   function handleSelectedCountry(country) {
     setSelectedCountry(country);
@@ -65,36 +89,42 @@ export default function App() {
     );
 
     searchedCountry = SelectedRegion.filter((country) =>
-      country.name.includes(capitalizeWords)
+      country.name.common.includes(capitalizeWords)
     );
   }
 
   return (
     <>
-      <Header />
+      {loader ? (
+        <Loader />
+      ) : (
+        <>
+          <Header />
 
-      <Main>
-        {selectedCountry ? (
-          <CountryDetails
-            selectedCountry={selectedCountry}
-            onSelectedCountry={handleSelectedCountry}
-            countries={countries}
-            OnSetQuery={setQuery}
-          />
-        ) : (
-          <>
-            <NavBar>
-              <Search query={query} onSetQuery={setQuery} />
-              <Filter region={region} onSetRegion={setRegion} />
-            </NavBar>
+          <Main>
+            {selectedCountry ? (
+              <CountryDetails
+                selectedCountry={selectedCountry}
+                onSelectedCountry={handleSelectedCountry}
+                countries={countries}
+                OnSetQuery={setQuery}
+              />
+            ) : (
+              <>
+                <NavBar>
+                  <Search query={query} onSetQuery={setQuery} />
+                  <Filter region={region} onSetRegion={setRegion} />
+                </NavBar>
 
-            <Countries
-              countries={query ? searchedCountry : SelectedRegion}
-              onSelectedCountry={handleSelectedCountry}
-            />
-          </>
-        )}
-      </Main>
+                <Countries
+                  countries={query ? searchedCountry : SelectedRegion}
+                  onSelectedCountry={handleSelectedCountry}
+                />
+              </>
+            )}
+          </Main>
+        </>
+      )}
     </>
   );
 }
