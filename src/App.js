@@ -42,45 +42,27 @@ export default function App() {
     }
   }, []);
 
-  console.log(countries);
-
   function handleSelectedCountry(country) {
     setSelectedCountry(country);
     window.scrollTo(0, 0);
   }
 
-  let SelectedRegion = countries;
+  // selected region
+  let selectedRegion = countries;
 
   function chooseRegion(region) {
-    SelectedRegion = countries.filter((country) => country.region === region);
+    selectedRegion = countries.filter((country) => country.region === region);
   }
 
-  switch (region) {
-    case "Africa":
-      chooseRegion("Africa");
-      break;
-
-    case "America":
-      chooseRegion("Americas");
-      break;
-
-    case "Asia":
-      chooseRegion("Asia");
-      break;
-
-    case "Europe":
-      chooseRegion("Europe");
-      break;
-
-    case "Oceania":
-      chooseRegion("Oceania");
-      break;
-
-    default:
-      SelectedRegion = countries;
-      break;
+  if (!region.startsWith("Filter")) {
+    if (region === "All") {
+      selectedRegion = countries;
+    } else {
+      chooseRegion(region);
+    }
   }
 
+  // searched country
   let searchedCountry = [];
 
   if (query) {
@@ -88,7 +70,7 @@ export default function App() {
       char.toUpperCase()
     );
 
-    searchedCountry = SelectedRegion.filter((country) =>
+    searchedCountry = selectedRegion.filter((country) =>
       country.name.common.includes(capitalizeWords)
     );
   }
@@ -117,7 +99,7 @@ export default function App() {
                 </NavBar>
 
                 <Countries
-                  countries={query ? searchedCountry : SelectedRegion}
+                  countries={query ? searchedCountry : selectedRegion}
                   onSelectedCountry={handleSelectedCountry}
                 />
               </>

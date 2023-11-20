@@ -6,7 +6,12 @@ export default function Filter({ region, onSetRegion }) {
   function handleSetRegion(el) {
     if (el.matches("ul")) return;
 
-    onSetRegion(el.textContent);
+    if (el.textContent === "America") {
+      onSetRegion("Americas");
+    } else {
+      onSetRegion(el.textContent);
+    }
+
     setIsOpen(false);
   }
 
