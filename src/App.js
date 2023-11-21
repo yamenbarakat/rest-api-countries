@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // css files
 import "./index.css";
@@ -16,63 +16,27 @@ import Filter from "./components/Filter";
 import Search from "./components/Search";
 import Loader from "./components/Loader";
 
+import { useCountries } from "./custom-hooks/useCountries";
+import { useLocalStorageTheme } from "./custom-hooks/useLocalStorageTheme";
+import { useSelection } from "./custom-hooks/useSelection";
+
 export default function App() {
-  const [countries, setCountries] = useState([]);
   const [region, setRegion] = useState("Filter by Region");
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [query, setQuery] = useState("");
-  const [loader, setLoader] = useState(true);
 
-  useEffect(() => {
-    async function fetchCountries() {
-      const res = await fetch("https://restcountries.com/v3.1/all");
-      const data = await res.json();
-      setCountries(data);
-      setLoader(false);
-    }
-
-    fetchCountries();
-  }, []);
-
-  useEffect(() => {
-    const savedMode = localStorage.getItem("mode");
-
-    if (savedMode) {
-      document.body.classList.add("dark");
-    }
-  }, []);
+  // custom hooks
+  const [countries, loader, error] = useCountries();
+  const [setMode] = useLocalStorageTheme();
+  const [selectedRegion, searchedCountry] = useSelection(
+    countries,
+    region,
+    query
+  );
 
   function handleSelectedCountry(country) {
     setSelectedCountry(country);
     window.scrollTo(0, 0);
-  }
-
-  // selected region
-  let selectedRegion = countries;
-
-  function chooseRegion(region) {
-    selectedRegion = countries.filter((country) => country.region === region);
-  }
-
-  if (!region.startsWith("Filter")) {
-    if (region === "All") {
-      selectedRegion = countries;
-    } else {
-      chooseRegion(region);
-    }
-  }
-
-  // searched country
-  let searchedCountry = [];
-
-  if (query) {
-    const capitalizeWords = query.replace(/\b\w/g, (char) =>
-      char.toUpperCase()
-    );
-
-    searchedCountry = selectedRegion.filter((country) =>
-      country.name.common.includes(capitalizeWords)
-    );
   }
 
   return (
@@ -81,30 +45,35 @@ export default function App() {
         <Loader />
       ) : (
         <>
-          <Header />
+          <Header onSetMode={setMode} />
 
-          <Main>
-            {selectedCountry ? (
-              <CountryDetails
-                selectedCountry={selectedCountry}
-                onSelectedCountry={handleSelectedCountry}
-                countries={countries}
-                OnSetQuery={setQuery}
-              />
-            ) : (
-              <>
-                <NavBar>
-                  <Search query={query} onSetQuery={setQuery} />
-                  <Filter region={region} onSetRegion={setRegion} />
-                </NavBar>
-
-                <Countries
-                  countries={query ? searchedCountry : selectedRegion}
+          {error ? (
+            <h2 className="error">{error}</h2>
+          ) : (
+            <Main>
+              {selectedCountry ? (
+                <CountryDetails
+                  selectedCountry={selectedCountry}
                   onSelectedCountry={handleSelectedCountry}
+                  countries={countries}
+                  OnSetQuery={setQuery}
                 />
-              </>
-            )}
-          </Main>
+              ) : (
+                <>
+                  <NavBar>
+                    <Search query={query} onSetQuery={setQuery} />
+                    <Filter region={region} onSetRegion={setRegion} />
+                  </NavBar>
+
+                  <Countries
+                    countries={query ? searchedCountry : selectedRegion}
+                    onSelectedCountry={handleSelectedCountry}
+                    error={error}
+                  />
+                </>
+              )}
+            </Main>
+          )}
         </>
       )}
     </>

@@ -1,11 +1,11 @@
-export default function Countries({ countries, onSelectedCountry }) {
+export default function Countries({ countries, onSelectedCountry, error }) {
   return (
     <section className="countries">
       <div className="container">
         {countries.length === 0 ? (
           <p className="no-result">No Results Found</p>
         ) : (
-          countries.map((country) => (
+          countries?.map((country) => (
             <Country
               country={country}
               key={country.name.common}
