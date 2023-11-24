@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export function useCountries() {
   const [countries, setCountries] = useState([]);
-  const [loader, setLoader] = useState(true);
+  const [isLoading, setLoader] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export function useCountries() {
 
         if (!res.ok) {
           throw new Error(
-            "⛔ Failt to fetch countries, please try to reload the page later"
+            "⛔ Something went wrong with fetching countries, please try again later"
           );
         }
 
@@ -29,5 +29,5 @@ export function useCountries() {
     fetchCountries();
   }, []);
 
-  return [countries, loader, error];
+  return [countries, isLoading, error];
 }

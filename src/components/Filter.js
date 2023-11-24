@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 
-export default function Filter({ region, onSetRegion }) {
+export default function Filter({ region, onSetRegion, onSetQuery }) {
   const [isOpen, setIsOpen] = useState(false);
 
   function handleSetRegion(el) {
+    onSetQuery("");
+
     if (el.matches("ul")) return;
 
     if (el.textContent === "America") {

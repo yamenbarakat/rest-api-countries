@@ -18,7 +18,6 @@ import Loader from "./components/Loader";
 
 import { useCountries } from "./custom-hooks/useCountries";
 import { useLocalStorageTheme } from "./custom-hooks/useLocalStorageTheme";
-import { useSelection } from "./custom-hooks/useSelection";
 
 export default function App() {
   const [region, setRegion] = useState("Filter by Region");
@@ -26,55 +25,76 @@ export default function App() {
   const [query, setQuery] = useState("");
 
   // custom hooks
-  const [countries, loader, error] = useCountries();
+  const [countries, isLoading, error] = useCountries();
   const [setMode] = useLocalStorageTheme();
-  const [selectedRegion, searchedCountry] = useSelection(
-    countries,
-    region,
-    query
-  );
 
   function handleSelectedCountry(country) {
     setSelectedCountry(country);
     window.scrollTo(0, 0);
   }
 
+  const selectedRegion = handleSelectedRegion(countries, region);
+
+  const searchedCountry = handleSearchedCountry(query);
+
+  function handleSelectedRegion(countries, region) {
+    if (region.startsWith("Filter")) return countries;
+
+    if (region === "All") {
+      return countries;
+    } else {
+      return countries.filter((country) => country.region === region);
+    }
+  }
+
+  function handleSearchedCountry(query) {
+    if (!query) return;
+
+    const capitalizeWords = query.replace(/\b\w/g, (char) =>
+      char.toUpperCase()
+    );
+
+    return selectedRegion.filter((country) =>
+      country.name.common.includes(capitalizeWords)
+    );
+  }
+
   return (
     <>
-      {loader ? (
-        <Loader />
-      ) : (
-        <>
+      {isLoading && <Loader />}
+
+      {error && <h2 className="error">{error}</h2>}
+
+      {!isLoading && !error && (
+        <Main>
           <Header onSetMode={setMode} />
 
-          {error ? (
-            <h2 className="error">{error}</h2>
+          {selectedCountry ? (
+            <CountryDetails
+              selectedCountry={selectedCountry}
+              onSelectedCountry={handleSelectedCountry}
+              countries={countries}
+              OnSetQuery={setQuery}
+            />
           ) : (
-            <Main>
-              {selectedCountry ? (
-                <CountryDetails
-                  selectedCountry={selectedCountry}
-                  onSelectedCountry={handleSelectedCountry}
-                  countries={countries}
-                  OnSetQuery={setQuery}
+            <>
+              <NavBar>
+                <Search query={query} onSetQuery={setQuery} />
+                <Filter
+                  region={region}
+                  onSetRegion={setRegion}
+                  onSetQuery={setQuery}
                 />
-              ) : (
-                <>
-                  <NavBar>
-                    <Search query={query} onSetQuery={setQuery} />
-                    <Filter region={region} onSetRegion={setRegion} />
-                  </NavBar>
+              </NavBar>
 
-                  <Countries
-                    countries={query ? searchedCountry : selectedRegion}
-                    onSelectedCountry={handleSelectedCountry}
-                    error={error}
-                  />
-                </>
-              )}
-            </Main>
+              <Countries
+                countries={query ? searchedCountry : selectedRegion}
+                onSelectedCountry={handleSelectedCountry}
+                error={error}
+              />
+            </>
           )}
-        </>
+        </Main>
       )}
     </>
   );

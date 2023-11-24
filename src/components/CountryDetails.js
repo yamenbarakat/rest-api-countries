@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function CountryDetails({
   selectedCountry,
@@ -40,38 +40,40 @@ export default function CountryDetails({
 
   function handleSelectedCountry(name) {
     const country = countries.find((country) => country.name.common === name);
-
     onSelectedCountry(country);
   }
-
-  // set some styles dynamically
-  useEffect(() => {
-    const bordersContainer = document.querySelector(".borders-countries");
-    const children = document.querySelectorAll(".borders button");
-
-    // change grid values base on the number of buttons
-    if (children.length > 4) {
-      bordersContainer.style.gridTemplateColumns = "none";
-    } else {
-      bordersContainer.style.gridTemplateColumns = "auto 1fr";
-    }
-
-    // make all the buttons have the same size as the bigger one
-    // Find the maximum width among all child elements
-    const maxWidth = Math.max(
-      ...Array.from(children).map((child) => child.clientWidth)
-    );
-
-    // Set the width of all child elements to the biggest width
-    children.forEach((child) => {
-      child.style.width = `${maxWidth}px`;
-    });
-  }, [borders]);
 
   function handleRemoveSelectedCountry() {
     onSelectedCountry(null);
     OnSetQuery("");
   }
+
+  // set some styles dynamically
+  const bordersContainer = useRef();
+  const borderbuttons = useRef();
+
+  useEffect(() => {
+    const buttons = borderbuttons.current.children;
+
+    // change grid values based on the number of buttons
+    if (buttons.length > 4) {
+      bordersContainer.current.style.gridTemplateColumns = "none";
+    } else {
+      bordersContainer.current.style.gridTemplateColumns = "auto 1fr";
+    }
+
+    const buttonsArray = Array.from(buttons);
+
+    //Find the maximum width among all buttons elements
+    const maxWidth = Math.max(
+      ...buttonsArray.map((child) => child.clientWidth)
+    );
+
+    // Set the width of all child elements to the biggest width
+    buttonsArray.forEach((child) => {
+      child.style.width = `${maxWidth}px`;
+    });
+  }, [borders]);
 
   return (
     <div className="country-details">
@@ -127,9 +129,9 @@ export default function CountryDetails({
                 </li>
               </ul>
             </div>
-            <div className="borders-countries">
+            <div className="borders-countries" ref={bordersContainer}>
               <p>Border Countries:</p>
-              <div className="borders">
+              <div className="borders" ref={borderbuttons}>
                 {bordersOfCountry
                   ? bordersOfCountry.map((country) => (
                       <button
