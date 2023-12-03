@@ -15,9 +15,30 @@ import CountryDetails from "./components/CountryDetails";
 import Filter from "./components/Filter";
 import Search from "./components/Search";
 import Loader from "./components/Loader";
+import Error from "./components/Error";
 
 import { useCountries } from "./custom-hooks/useCountries";
 import { useLocalStorageTheme } from "./custom-hooks/useLocalStorageTheme";
+
+function handleSelectedRegion(countries, region) {
+  if (region.startsWith("Filter")) return countries;
+
+  if (region === "All") {
+    return countries;
+  } else {
+    return countries.filter((country) => country.region === region);
+  }
+}
+
+function handleSearchedCountry(query, selectedRegion) {
+  if (!query) return;
+
+  const capitalizeWords = query.replace(/\b\w/g, (char) => char.toUpperCase());
+
+  return selectedRegion.filter((country) =>
+    country.name.common.includes(capitalizeWords)
+  );
+}
 
 export default function App() {
   const [region, setRegion] = useState("Filter by Region");
@@ -25,7 +46,7 @@ export default function App() {
   const [query, setQuery] = useState("");
 
   // custom hooks
-  const [countries, isLoading, error] = useCountries();
+  const [countries, status] = useCountries();
   const [setMode] = useLocalStorageTheme();
 
   function handleSelectedCountry(country) {
@@ -35,37 +56,15 @@ export default function App() {
 
   const selectedRegion = handleSelectedRegion(countries, region);
 
-  const searchedCountry = handleSearchedCountry(query);
-
-  function handleSelectedRegion(countries, region) {
-    if (region.startsWith("Filter")) return countries;
-
-    if (region === "All") {
-      return countries;
-    } else {
-      return countries.filter((country) => country.region === region);
-    }
-  }
-
-  function handleSearchedCountry(query) {
-    if (!query) return;
-
-    const capitalizeWords = query.replace(/\b\w/g, (char) =>
-      char.toUpperCase()
-    );
-
-    return selectedRegion.filter((country) =>
-      country.name.common.includes(capitalizeWords)
-    );
-  }
+  const searchedCountry = handleSearchedCountry(query, selectedRegion);
 
   return (
     <>
-      {isLoading && <Loader />}
+      {status === "loading" && <Loader />}
 
-      {error && <h2 className="error">{error}</h2>}
+      {status === "error" && <Error />}
 
-      {!isLoading && !error && (
+      {status === "ready" && (
         <Main>
           <Header onSetMode={setMode} />
 
@@ -90,7 +89,6 @@ export default function App() {
               <Countries
                 countries={query ? searchedCountry : selectedRegion}
                 onSelectedCountry={handleSelectedCountry}
-                error={error}
               />
             </>
           )}

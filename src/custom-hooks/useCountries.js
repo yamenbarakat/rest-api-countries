@@ -2,32 +2,27 @@ import { useEffect, useState } from "react";
 
 export function useCountries() {
   const [countries, setCountries] = useState([]);
-  const [isLoading, setLoader] = useState(true);
-  const [error, setError] = useState("");
+  const [status, setStatus] = useState("loading");
 
   useEffect(() => {
     async function fetchCountries() {
       try {
-        setError("");
         const res = await fetch("https://restcountries.com/v3.1/all");
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(
-            "⛔ Something went wrong with fetching countries, please try again later"
-          );
+          throw new Error();
         }
 
         setCountries(data);
+        setStatus("ready");
       } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoader(false);
+        setStatus("error");
       }
     }
 
     fetchCountries();
   }, []);
 
-  return [countries, isLoading, error];
+  return [countries, status];
 }

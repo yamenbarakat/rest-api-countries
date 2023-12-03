@@ -1,4 +1,4 @@
-export default function Countries({ countries, onSelectedCountry, onScroll }) {
+export default function Countries({ countries, onSelectedCountry }) {
   return (
     <section className="countries">
       <div className="container">
